@@ -3,9 +3,10 @@ import axios from 'axios';
 
 interface SignupModalProps {
   setIsSignupModalOpen: Dispatch<SetStateAction<boolean>>;
+  setIsSignupSuccessOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-function SignupModal({ setIsSignupModalOpen }: SignupModalProps) {
+function SignupModal({ setIsSignupModalOpen, setIsSignupSuccessOpen }: SignupModalProps) {
   const closeSignupModal = () => {
     setIsSignupModalOpen(false);
   };
@@ -23,6 +24,7 @@ function SignupModal({ setIsSignupModalOpen }: SignupModalProps) {
   const useridRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const passwordConfirmRef = useRef<HTMLInputElement | null>(null);
+  const nameRef = useRef<HTMLInputElement | null>(null);
 
   const passwordHandler = (value: string) => {
     const regex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/;
@@ -45,27 +47,42 @@ function SignupModal({ setIsSignupModalOpen }: SignupModalProps) {
   };
 
   const useridConfirm = async () => {
-    await axios.get('https://kingide-1f2b5-default-rtdb.firebaseio.com/users.json').then((res) => {
-      const userids = Object.values(res.data).map((user: any) => {
-        return user.userid;
+    await axios
+      .get(`http://localhost:8080/duplicate/${userid}`)
+      .then((res: any) => {
+        if (res.data === '') {
+          setIsAreadyUserid(false);
+          setIsUserid(true);
+        } else {
+          setIsAreadyUserid(true);
+          setIsUserid(false);
+        }
+      })
+      .catch((err) => {
+        console.error(err);
       });
-      setIsAreadyUserid(userids.includes(userid));
-      setIsUserid(!userids.includes(userid));
-    });
   };
 
   const signupApi = async () => {
-    if (isUserid && !isAreadyUserid && isPasswordConfirm && isPassword) {
+    if (isUserid && !isAreadyUserid && isPasswordConfirm && isPassword && name.length >= 1) {
       await axios
-        .post(`https://kingide-1f2b5-default-rtdb.firebaseio.com/users.json`, {
+        .post(`http://localhost:8080/signup`, {
           name: name,
-          userid: userid,
+          loginId: userid,
           password: password,
-          phonenumber: phoneNumber,
+          mobileNumber: phoneNumber,
         })
-        .then(() => {
-          setIsSignupModalOpen(false);
+        .then((res: any) => {
+          if (res.data.httpCode === 200) {
+            setIsSignupModalOpen(false);
+            setIsSignupSuccessOpen(true);
+          }
+        })
+        .catch((err) => {
+          console.error(err);
         });
+    } else if (name.length < 1) {
+      if (nameRef.current) nameRef.current.focus();
     } else if (!isUserid || isAreadyUserid) {
       if (useridRef.current) {
         useridRef.current.focus();
@@ -95,6 +112,7 @@ function SignupModal({ setIsSignupModalOpen }: SignupModalProps) {
               setName(e.target.value);
             }}
             placeholder="이름"
+            ref={nameRef}
           />
           <div className={`${(!isUserid && userid.length > 0) || isUserid ? 'none' : 'mb-10'} w-full flex`}>
             <input
