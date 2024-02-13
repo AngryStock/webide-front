@@ -2,10 +2,16 @@ import { Dispatch, SetStateAction, useRef, useState } from 'react';
 
 interface LoginModalProps {
   setIsLoginModalOpen: Dispatch<SetStateAction<boolean>>;
+  setIsLogin: Dispatch<SetStateAction<boolean>>;
 }
 
-function LoginModal({ setIsLoginModalOpen }: LoginModalProps) {
+function LoginModal({ setIsLoginModalOpen, setIsLogin }: LoginModalProps) {
   const closeLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
+
+  const loginHandler = () => {
+    setIsLogin(true);
     setIsLoginModalOpen(false);
   };
 
@@ -50,7 +56,9 @@ function LoginModal({ setIsLoginModalOpen }: LoginModalProps) {
           <div
             className="w-[150px] h-10 rounded-[20px] font-bold flex justify-center items-center cursor-pointer"
             style={{ backgroundColor: '#D9D9D9' }}
-            onClick={() => {}}
+            onClick={() => {
+              loginHandler();
+            }}
           >
             로그인
           </div>
