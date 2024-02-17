@@ -11,6 +11,7 @@ function LoginModal({ setIsLoginModalOpen, setIsLogin }: LoginModalProps) {
   };
 
   const loginHandler = () => {
+    localStorage.setItem('wschat.sender', userid);
     setIsLogin(true);
     setIsLoginModalOpen(false);
   };
@@ -24,7 +25,7 @@ function LoginModal({ setIsLoginModalOpen, setIsLogin }: LoginModalProps) {
   return (
     <div className="absolute w-full h-full flex justify-center items-center">
       <div className="absolute w-full h-full" onClick={closeLoginModal}></div>
-      <div className="w-[380px] h-[350px] bg-black  rounded-[20px] z-10 p-10">
+      <form className="w-[380px] h-[350px] bg-black  rounded-[20px] z-10 p-10">
         <div className=" text-2xl text-white text-center mb-10">
           <span className="font-bold">king</span>
           <span>ide</span>
@@ -63,7 +64,7 @@ function LoginModal({ setIsLoginModalOpen, setIsLogin }: LoginModalProps) {
             로그인
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }

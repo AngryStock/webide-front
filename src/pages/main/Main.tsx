@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SignupModal from './component/SignupModal';
 import SignupSuccess from './component/SignupSuccess';
 import LoginModal from './component/LoginModal';
@@ -6,9 +6,28 @@ import ChatRoom from './component/ChatRoom';
 import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { isTerminalOpenHandler, isChattingOpenHandler } from '../../store/reducers/uiControlSlice';
 import MyProfile from './component/MyProfile';
+import MyTreeView from './component/MyTreeView';
 
-function Main() {
+interface MainProps {
+  roomId: string;
+}
+
+function Main({ roomId }: MainProps) {
   const dispatch = useAppDispatch();
+
+  const [isLogin, setIsLogin] = useState(false);
+  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
+  const [isSignupSuccessOpen, setIsSignupSuccessOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isMyProfileOpen, setIsMyProfileOpen] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem('wschat.sender')) {
+      setIsLogin(true);
+    } else {
+      setIsLogin(false);
+    }
+  }, []);
 
   const isTerminalOpen = useAppSelector((state) => {
     if (state.uiControl.isTerminalOpen === undefined) {
@@ -25,18 +44,12 @@ function Main() {
     }
   });
   const logoutHandler = () => {
+    localStorage.removeItem('wschat.sender');
     setIsLogin(false);
   };
 
-  const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
-  const [isSignupSuccessOpen, setIsSignupSuccessOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [isMyProfileOpen, setIsMyProfileOpen] = useState(false);
-
-  const [isLogin, setIsLogin] = useState(true);
-
   return (
-    <div className="h-full w-full ">
+    <div className="h-full w-full text-white">
       {isSignupModalOpen && (
         <SignupModal setIsSignupModalOpen={setIsSignupModalOpen} setIsSignupSuccessOpen={setIsSignupSuccessOpen} />
       )}
@@ -53,7 +66,7 @@ function Main() {
           <span className="font-bold">king</span>
           <span>ide</span>
         </button>
-        <div className="flex h-full flex-grow overflow-x-scroll px-[10px] items-center text-white text-sm">
+        <div className="flex h-full flex-grow overflow-x-scroll px-[10px] items-center text-white text-sm scrollbar-hide">
           <div className=" cursor-pointer customhover h-full flex justify-center items-center px-[10px]">파일</div>
           <div className=" cursor-pointer customhover h-full flex justify-center items-center px-[10px]">보기</div>
           <div className=" cursor-pointer customhover h-full flex justify-center items-center px-[10px]">실행</div>
@@ -113,7 +126,9 @@ function Main() {
             </span>
             <button className="material-symbols-outlined text-white">add</button>
           </div>
-          <div className="h-full" style={{ backgroundColor: '#212426', height: 'calc(100% - 32px)' }}></div>
+          <div className="h-full px-2 py-1" style={{ backgroundColor: '#212426', height: 'calc(100% - 32px)' }}>
+            <MyTreeView />
+          </div>
         </div>
         <div className="w-full h-full">
           <div className="w-full h-2/3">
@@ -180,7 +195,7 @@ function Main() {
             {isTerminalOpen && (
               <div className="w-full" style={{ height: 'calc(100% - 30px)', backgroundColor: '#141617' }}></div>
             )}
-            {isChattingOpen && <ChatRoom />}
+            {isChattingOpen && <ChatRoom roomId={roomId} />}
           </div>
         </div>
       </div>
