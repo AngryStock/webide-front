@@ -22,3 +22,7 @@ input::-webkit-inner-spin-button {
 .customhover:hover {
   background-color: #141617;
 }
+
+.FILL {
+  font-variation-settings: 'FILL' 1;
+}
