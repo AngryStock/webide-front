@@ -1,4 +1,4 @@
-import { Tree, getBackendOptions, MultiBackend, NodeModel } from '@minoru/react-dnd-treeview';
+import { Tree, getBackendOptions, MultiBackend } from '@minoru/react-dnd-treeview';
 import { DndProvider } from 'react-dnd';
 import initialData from './sample-default.json';
 import { useState } from 'react';
@@ -15,9 +15,9 @@ function MyTreeView() {
         rootId={0}
         onDrop={handleDrop}
         render={(node, { depth, isOpen, onToggle }) => (
-          <div className="flex items-center h-[18px] text-[12px] my-1" style={{ marginLeft: depth * 10 }}>
+          <div className="flex items-center h-5 text-[12px] my-1" style={{ marginLeft: depth * 10 }} onClick={onToggle}>
             {node.droppable && (
-              <div className="flex items-center" onClick={onToggle}>
+              <div className="flex items-center">
                 {isOpen ? (
                   <div className="material-symbols-outlined text-[20px]">keyboard_arrow_down</div>
                 ) : (
