@@ -1,18 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+interface defaultChatRoom {
+  type: string;
+  sender: string;
+  message: string;
+  createAt: string;
+  id: number;
+}
+
 export const defaultChatRoomSlice = createSlice({
   name: 'defaultChatRoom',
-  initialState: { isTerminalOpen: true, isChattingOpen: false },
+  initialState: [],
   reducers: {
-    isTerminalOpenHandler(state, action) {
-      state.isTerminalOpen = action.payload;
-    },
-    isChattingOpenHandler(state, action) {
-      state.isChattingOpen = action.payload;
+    defaultChatRoomMessagePush(state: defaultChatRoom[], action) {
+      console.log(action.payload);
+      action.payload.forEach((el: defaultChatRoom) => {
+        state.push(el);
+      });
     },
   },
 });
 
-export const { isTerminalOpenHandler, isChattingOpenHandler } = defaultChatRoomSlice.actions;
+export const { defaultChatRoomMessagePush } = defaultChatRoomSlice.actions;
 
 export default defaultChatRoomSlice.reducer;

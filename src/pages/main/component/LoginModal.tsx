@@ -55,7 +55,7 @@ function LoginModal({ setIsLoginModalOpen, setIsLogin }: LoginModalProps) {
         />
         <div className="w-full flex justify-center items-center">
           <div
-            className="w-[150px] h-10 rounded-[20px] font-bold flex justify-center items-center cursor-pointer"
+            className="w-[150px] h-10 rounded-[20px] font-bold flex justify-center items-center cursor-pointer text-black"
             style={{ backgroundColor: '#D9D9D9' }}
             onClick={() => {
               loginHandler();
