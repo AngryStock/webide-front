@@ -7,6 +7,7 @@ import { useAppSelector, useAppDispatch } from '../../store/hooks';
 import { isTerminalOpenHandler, isChattingOpenHandler } from '../../store/reducers/uiControlSlice';
 import MyProfile from './component/MyProfile';
 import MyTreeView from './component/MyTreeView';
+import FileMenu from './component/FileMenu';
 
 interface MainProps {
   roomId: string;
@@ -20,6 +21,7 @@ function Main({ roomId }: MainProps) {
   const [isSignupSuccessOpen, setIsSignupSuccessOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isMyProfileOpen, setIsMyProfileOpen] = useState(false);
+  const [isFileMenuOpen, setIsFileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (localStorage.getItem('wschat.sender')) {
@@ -58,6 +60,7 @@ function Main({ roomId }: MainProps) {
       )}
       {isLoginModalOpen && <LoginModal setIsLoginModalOpen={setIsLoginModalOpen} setIsLogin={setIsLogin} />}
       {isMyProfileOpen && <MyProfile setIsMyProfileOpen={setIsMyProfileOpen} />}
+
       <div
         className="w-full h-[32px] px-5 flex"
         style={{ backgroundColor: '#2F3336', borderBottom: 'solid 1px #141617' }}
@@ -66,8 +69,16 @@ function Main({ roomId }: MainProps) {
           <span className="font-bold">king</span>
           <span>ide</span>
         </button>
-        <div className="flex h-full flex-grow overflow-x-scroll px-[10px] items-center text-white text-sm scrollbar-hide">
-          <div className=" cursor-pointer customhover h-full flex justify-center items-center px-[10px]">파일</div>
+        <div className="flex h-full flex-grow  px-[10px] items-center text-white text-sm scrollbar-hide ">
+          <div
+            className=" cursor-pointer customhover h-full flex justify-center items-center px-[10px] relative"
+            onClick={() => {
+              setIsFileMenuOpen(!isFileMenuOpen);
+            }}
+          >
+            파일
+            {isFileMenuOpen && <FileMenu />}
+          </div>
           <div className=" cursor-pointer customhover h-full flex justify-center items-center px-[10px]">보기</div>
           <div className=" cursor-pointer customhover h-full flex justify-center items-center px-[10px]">실행</div>
           <div className=" cursor-pointer customhover h-full flex justify-center items-center px-[10px]">터미널</div>

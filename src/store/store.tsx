@@ -3,9 +3,11 @@ import { configureStore, ThunkAction, Action, combineReducers } from '@reduxjs/t
 import storage from 'redux-persist/lib/storage';
 import { persistReducer } from 'redux-persist';
 import uiControlSliceReducer from './reducers/uiControlSlice';
+import defaultChatRoomSliceReducer from './reducers/defaultChatRoomSlice';
 
 const reducer = combineReducers({
   uiControl: uiControlSliceReducer,
+  defaultChatRoom: defaultChatRoomSliceReducer,
 });
 
 const persistConfig = {

@@ -3,8 +3,11 @@ import Main from './pages/main/Main';
 import PageChatRoom from './pages/chatroom/PageChatRoom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useAppDispatch } from './store/hooks';
+import { defaultChatRoomMessagePush } from './store/reducers/defaultChatRoomSlice';
 
 function App() {
+  const dispatch = useAppDispatch();
   const [roomId, setRoomId] = useState('');
 
   useEffect(() => {
@@ -22,11 +25,15 @@ function App() {
       .then((result) => {
         const roomId = result.data ? result.data.roomId : result.roomId;
         setRoomId(roomId);
+        axios.get(`http://localhost:8080/chat/roomId/${roomId}`).then((res) => {
+          console.log(res.data);
+          dispatch(defaultChatRoomMessagePush(res.data));
+        });
       })
       .catch((err) => {
         console.error(err);
       });
-  }, []);
+  }, [dispatch]);
 
   return (
     <Routes>

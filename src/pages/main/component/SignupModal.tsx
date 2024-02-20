@@ -130,7 +130,7 @@ function SignupModal({ setIsSignupModalOpen, setIsSignupSuccessOpen }: SignupMod
               autoComplete="off"
             />
             <div
-              className="w-[80px] h-10 rounded-[20px] font-bold flex justify-center items-center cursor-pointer"
+              className="w-[80px] h-10 rounded-[20px] font-bold flex justify-center items-center cursor-pointer text-black"
               style={{ backgroundColor: '#D9D9D9' }}
               onClick={() => {
                 useridConfirm();
@@ -197,7 +197,7 @@ function SignupModal({ setIsSignupModalOpen, setIsSignupSuccessOpen }: SignupMod
           />
           <div className="w-full flex justify-center items-center">
             <div
-              className="w-[150px] h-10 rounded-[20px] font-bold flex justify-center items-center cursor-pointer"
+              className="w-[150px] h-10 rounded-[20px] font-bold flex justify-center items-center cursor-pointer text-black"
               style={{ backgroundColor: '#D9D9D9' }}
               onClick={() => {
                 signupApi();

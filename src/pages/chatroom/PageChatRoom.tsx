@@ -1,16 +1,26 @@
 import { useEffect, useRef, useState } from 'react';
 import * as StompJs from '@stomp/stompjs';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { defaultChatRoomMessagePush } from '../../store/reducers/defaultChatRoomSlice';
 
 interface PageChatRoomProps {
   roomId: string;
 }
 
 function PageChatRoom({ roomId }: PageChatRoomProps) {
+  const dispatch = useAppDispatch();
+
   const chatRef = useRef<HTMLDivElement[]>([]);
   const client = useRef<StompJs.Client | null>(null);
   const [sender, setSender] = useState('');
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<{ type: string; sender: string; message: string }[]>([]);
+  const messages: {
+    type: string;
+    sender: string;
+    message: string;
+    createAt: string;
+    id: number;
+  }[] = useAppSelector((state) => state.defaultChatRoom);
 
   useEffect(() => {
     const storedSender = localStorage.getItem('wschat.sender');
@@ -66,7 +76,7 @@ function PageChatRoom({ roomId }: PageChatRoomProps) {
       client.current.subscribe(`/sub/chat/room/${roomId}`, (message) => {
         console.log(message.body);
         const newMessage = JSON.parse(message.body);
-        setMessages((prevMessages) => [...prevMessages, newMessage]);
+        dispatch(defaultChatRoomMessagePush([newMessage]));
       });
     }
   };
