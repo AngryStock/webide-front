@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import SignupModal from './component/SignupModal';
 import SignupSuccess from './component/SignupSuccess';
 import LoginModal from './component/LoginModal';
@@ -8,9 +8,23 @@ import { isTerminalOpenHandler, isChattingOpenHandler } from '../../store/reduce
 import MyProfile from './component/MyProfile';
 import MyTreeView from './component/MyTreeView';
 import FileMenu from './component/FileMenu';
+import { fileAdd, folderAdd } from '../../store/reducers/fileTreeSlice';
+import TreeRightClick from './component/TreeRightClick';
 
 interface MainProps {
   roomId: string;
+}
+interface FileTree {
+  id: number | string;
+  parent: number | string;
+  droppable?: boolean;
+  text: string;
+  data?: FileTreeData;
+}
+
+interface FileTreeData {
+  fileType: string;
+  fileSize: string;
 }
 
 function Main({ roomId }: MainProps) {
@@ -22,6 +36,12 @@ function Main({ roomId }: MainProps) {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isMyProfileOpen, setIsMyProfileOpen] = useState(false);
   const [isFileMenuOpen, setIsFileMenuOpen] = useState(false);
+  const [isTreeRightClick, setIsTreeRightClick] = useState(false);
+  const [treeRightClickXY, setTreeRightClickXY] = useState({ x: 100, y: 100 });
+  const [selectedFile, setSelectedFile] = useState<FileTree>({ id: 0, parent: 0, text: '' });
+  const [isEditFileName, setIsEditFileName] = useState(false);
+
+  const myTreeViewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (localStorage.getItem('wschat.sender')) {
@@ -51,7 +71,7 @@ function Main({ roomId }: MainProps) {
   };
 
   return (
-    <div className="h-full w-full text-white">
+    <div className="h-full w-full text-white relative">
       {isSignupModalOpen && (
         <SignupModal setIsSignupModalOpen={setIsSignupModalOpen} setIsSignupSuccessOpen={setIsSignupSuccessOpen} />
       )}
@@ -60,6 +80,13 @@ function Main({ roomId }: MainProps) {
       )}
       {isLoginModalOpen && <LoginModal setIsLoginModalOpen={setIsLoginModalOpen} setIsLogin={setIsLogin} />}
       {isMyProfileOpen && <MyProfile setIsMyProfileOpen={setIsMyProfileOpen} />}
+      {isTreeRightClick && (
+        <TreeRightClick
+          treeRightClickXY={treeRightClickXY}
+          selectedFile={selectedFile}
+          setIsTreeRightClick={setIsTreeRightClick}
+        />
+      )}
 
       <div
         className="w-full h-[32px] px-5 flex"
@@ -77,7 +104,7 @@ function Main({ roomId }: MainProps) {
             }}
           >
             파일
-            {isFileMenuOpen && <FileMenu />}
+            {isFileMenuOpen && <FileMenu selectedFile={selectedFile} />}
           </div>
           <div className=" cursor-pointer customhover h-full flex justify-center items-center px-[10px]">보기</div>
           <div className=" cursor-pointer customhover h-full flex justify-center items-center px-[10px]">실행</div>
@@ -126,7 +153,7 @@ function Main({ roomId }: MainProps) {
       <div className="w-full flex" style={{ height: 'calc(100% - 32px)' }}>
         <div className="w-[237px]  h-full" style={{ borderRight: 'solid 1px #141617' }}>
           <div
-            className="flex justify-between items-center h-[32px] px-5"
+            className="flex justify-between items-center h-[32px] pl-5 pr-2"
             style={{ backgroundColor: '#2F3336', borderBottom: 'solid 1px #141617' }}
           >
             <span
@@ -135,10 +162,42 @@ function Main({ roomId }: MainProps) {
             >
               프로젝트
             </span>
-            <button className="material-symbols-outlined text-white">add</button>
+            <div className="flex items-center gap-2">
+              <button
+                className="material-symbols-outlined text-base"
+                onClick={() => {
+                  dispatch(fileAdd(selectedFile));
+                }}
+              >
+                new_window
+              </button>
+              <button
+                className="material-symbols-outlined text-base"
+                onClick={() => {
+                  dispatch(folderAdd(selectedFile));
+                }}
+              >
+                create_new_folder
+              </button>
+            </div>
           </div>
-          <div className="h-full px-2 py-1" style={{ backgroundColor: '#212426', height: 'calc(100% - 32px)' }}>
-            <MyTreeView />
+          <div style={{ backgroundColor: '#212426', height: 'calc(100% - 32px)' }}>
+            <div ref={myTreeViewRef}>
+              <MyTreeView
+                selectedFile={selectedFile}
+                setSelectedFile={setSelectedFile}
+                isEditFileName={isEditFileName}
+                setIsEditFileName={setIsEditFileName}
+                setIsTreeRightClick={setIsTreeRightClick}
+                setTreeRightClickXY={setTreeRightClickXY}
+              />
+            </div>
+            <div
+              style={{ height: `calc(100% - ${myTreeViewRef.current?.clientHeight})` }}
+              onClick={() => {
+                setSelectedFile({ id: 0, parent: 0, text: '' });
+              }}
+            ></div>
           </div>
         </div>
         <div className="w-full h-full">

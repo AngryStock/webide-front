@@ -4,10 +4,12 @@ import storage from 'redux-persist/lib/storage';
 import { persistReducer } from 'redux-persist';
 import uiControlSliceReducer from './reducers/uiControlSlice';
 import defaultChatRoomSliceReducer from './reducers/defaultChatRoomSlice';
+import fileTreeSliceReducer from './reducers/fileTreeSlice';
 
 const reducer = combineReducers({
   uiControl: uiControlSliceReducer,
   defaultChatRoom: defaultChatRoomSliceReducer,
+  fileTree: fileTreeSliceReducer,
 });
 
 const persistConfig = {

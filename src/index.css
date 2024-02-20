@@ -9,7 +9,13 @@ body,
 #root {
   font-family: 'Spoqa Han Sans Neo', 'Noto Sans KR', sans-serif;
   box-sizing: border-box;
+
   height: 100%;
+}
+
+input {
+  padding-inline: none !important;
+  padding-block: none !important;
 }
 
 /* Chrome, Safari, Edge, Opera */
@@ -22,7 +28,6 @@ input::-webkit-inner-spin-button {
 .customhover:hover {
   background-color: #141617;
 }
-
 .FILL {
   font-variation-settings: 'FILL' 1;
 }

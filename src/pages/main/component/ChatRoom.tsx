@@ -10,6 +10,7 @@ interface ChatRoomProps {
 function ChatRoom({ roomId }: ChatRoomProps) {
   const dispatch = useAppDispatch();
 
+  const chatRef = useRef<HTMLDivElement[]>([]);
   const client = useRef<StompJs.Client | null>(null);
   const [sender, setSender] = useState('');
   const [message, setMessage] = useState('');
@@ -36,6 +37,10 @@ function ChatRoom({ roomId }: ChatRoomProps) {
     };
   }, [roomId]); // roomId를 의존성 배열에 추가
 
+  useEffect(() => {
+    handleScroll(chatRef.current[messages.length - 1]);
+  }, [messages]); // messages가 업데이트될 때마다 호출
+
   const connect = () => {
     client.current = new StompJs.Client({
       brokerURL: 'ws://localhost:8080/ws-stomp/websocket', // 웹소켓 서버로 직접 접속
@@ -43,9 +48,6 @@ function ChatRoom({ roomId }: ChatRoomProps) {
       // connectHeaders: {
       //   'auth-token': 'spring-chat-auth-token',
       // },
-      debug: (str) => {
-        console.log(str);
-      },
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
@@ -69,7 +71,6 @@ function ChatRoom({ roomId }: ChatRoomProps) {
   const subscribe = () => {
     if (client.current) {
       client.current.subscribe(`/sub/chat/room/${roomId}`, (message) => {
-        console.log(message.body);
         const newMessage = JSON.parse(message.body);
         dispatch(defaultChatRoomMessagePush([newMessage]));
       });
@@ -87,15 +88,29 @@ function ChatRoom({ roomId }: ChatRoomProps) {
     setMessage(''); // 메시지 전송 후 입력 필드 초기화
   };
 
+  const handleScroll = (ref: HTMLDivElement | null) => {
+    if (ref) {
+      ref.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+  };
+
   return (
     <div className="w-full" style={{ height: 'calc(100% - 30px)' }}>
       <div
-        className="w-full overflow-y-scroll scrollbar-hide"
+        className="w-full overflow-y-scroll scrollbar-hide p-2"
         style={{ height: 'calc(100% - 30px)', backgroundColor: '#141617' }}
       >
         {messages.map((message, index) => (
-          <div key={index} className="text-white text-sm">
-            {message.sender}-{message.message}
+          <div
+            ref={(el: HTMLDivElement) => {
+              chatRef.current[index] = el;
+            }}
+            key={index}
+            className={`${
+              message.sender === localStorage.getItem('wschat.sender') ? 'text-right' : ' text-left'
+            }  text-white text-sm`}
+          >
+            {message.sender} - {message.message}
           </div>
         ))}
       </div>

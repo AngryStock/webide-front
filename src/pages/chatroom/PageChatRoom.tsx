@@ -48,9 +48,6 @@ function PageChatRoom({ roomId }: PageChatRoomProps) {
       // connectHeaders: {
       //   'auth-token': 'spring-chat-auth-token',
       // },
-      debug: (str) => {
-        console.log(str);
-      },
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
@@ -74,7 +71,6 @@ function PageChatRoom({ roomId }: PageChatRoomProps) {
   const subscribe = () => {
     if (client.current) {
       client.current.subscribe(`/sub/chat/room/${roomId}`, (message) => {
-        console.log(message.body);
         const newMessage = JSON.parse(message.body);
         dispatch(defaultChatRoomMessagePush([newMessage]));
       });
