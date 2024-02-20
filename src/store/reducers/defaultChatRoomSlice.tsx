@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-interface defaultChatRoom {
+export interface defaultChatRoom {
   type: string;
   sender: string;
   message: string;
@@ -13,7 +13,6 @@ export const defaultChatRoomSlice = createSlice({
   initialState: [],
   reducers: {
     defaultChatRoomMessagePush(state: defaultChatRoom[], action) {
-      console.log(action.payload);
       action.payload.forEach((el: defaultChatRoom) => {
         state.push(el);
       });
