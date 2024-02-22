@@ -1,18 +1,26 @@
-import { Navigate, Route, Routes } from 'react-router-dom';
-import Main from './pages/main/Main';
-import PageChatRoom from './pages/chatroom/PageChatRoom';
 import { useState } from 'react';
 
-function App() {
-  const [roomId, setRoomId] = useState('');
+import { Navigate, Route, Routes } from 'react-router-dom';
 
-  return (
-    <Routes>
-      <Route path="*" element={<Navigate to="/" replace />}></Route>
-      <Route path="/" element={<Main roomId={roomId} setRoomId={setRoomId} />}></Route>
-      <Route path="/pagechatroom" element={<PageChatRoom roomId={roomId} setRoomId={setRoomId} />}></Route>
-    </Routes>
-  );
+import PageChatRoom from './pages/chatroom/PageChatRoom';
+import Main from './pages/main/Main';
+
+function App() {
+    const [roomId, setRoomId] = useState('');
+
+    return (
+        <Routes>
+            <Route path="*" element={<Navigate to="/" replace />}></Route>
+            <Route
+                path="/"
+                element={<Main roomId={roomId} setRoomId={setRoomId} />}
+            ></Route>
+            <Route
+                path="/pagechatroom"
+                element={<PageChatRoom roomId={roomId} setRoomId={setRoomId} />}
+            ></Route>
+        </Routes>
+    );
 }
 
 export default App;
