@@ -17,9 +17,12 @@ export const defaultChatRoomSlice = createSlice({
         state.push(el);
       });
     },
+    defaultChatRoomDelete(state: defaultChatRoom[], action) {
+      return action.payload;
+    },
   },
 });
 
-export const { defaultChatRoomMessagePush } = defaultChatRoomSlice.actions;
+export const { defaultChatRoomMessagePush, defaultChatRoomDelete } = defaultChatRoomSlice.actions;
 
 export default defaultChatRoomSlice.reducer;

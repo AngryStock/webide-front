@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import * as StompJs from '@stomp/stompjs';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { defaultChatRoomMessagePush } from '../../store/reducers/defaultChatRoomSlice';
