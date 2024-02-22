@@ -1,20 +1,35 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 interface MyProfileProps {
   setIsMyProfileOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 function MyProfile({ setIsMyProfileOpen }: MyProfileProps) {
+  const [name, setName] = useState('');
+  const [userid, setUserId] = useState('');
+  const [phoneNumber, setPhoneNumer] = useState('');
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    let userData: any;
+    if (user) {
+      userData = JSON.parse(user);
+    }
+    if (!userData) {
+      return;
+    } else {
+      setName(userData.name);
+      setUserId(userData.loginId);
+      setPhoneNumer(userData.mobileNumber);
+    }
+  }, []);
+
   const closeMyProfile = () => {
     setIsMyProfileOpen(false);
   };
   const signoutHandler = () => {
     setIsMyProfileOpen(false);
   };
-
-  const [name, setName] = useState('test');
-  const [userid, setUserId] = useState('test');
-  const [phoneNumber, setPhoneNumer] = useState('01046458523');
 
   return (
     <div className="absolute w-full h-full flex justify-center items-center">

@@ -1,4 +1,8 @@
+import axios from 'axios';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
+import { useAppDispatch } from '../../../store/hooks';
+import { setUser } from '../../../store/reducers/userSlice';
+import { AuthApi } from '../../../api/api-util';
 
 interface LoginModalProps {
   setIsLoginModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -6,21 +10,41 @@ interface LoginModalProps {
 }
 
 function LoginModal({ setIsLoginModalOpen, setIsLogin }: LoginModalProps) {
-  const closeLoginModal = () => {
-    setIsLoginModalOpen(false);
-  };
-
-  const loginHandler = () => {
-    localStorage.setItem('wschat.sender', userid);
-    setIsLogin(true);
-    setIsLoginModalOpen(false);
-  };
+  const dispatch = useAppDispatch();
 
   const [userid, setUserId] = useState('');
   const [password, setPassword] = useState('');
 
   const useridRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
+  const closeLoginModal = () => {
+    setIsLoginModalOpen(false);
+  };
+
+  const loginHandler = async () => {
+    AuthApi.post('/login', { loginId: userid, password: password })
+      .then((res) => {
+        const token = res.headers.authorization.replace('Bearer ', '');
+        localStorage.setItem('access_token', token);
+        localStorage.setItem('token_type', 'Bearer');
+        const base64Url = token.split('.')[1]; // 토큰을 '.' 기준으로 나누고, payload 부분(인덱스 1)을 가져옵니다.
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/'); // Base64 URL 인코딩을 Base64로 변환
+        const payload = decodeURIComponent(
+          atob(base64)
+            .split('')
+            .map(function (c) {
+              return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            })
+            .join('')
+        );
+        const payloadData = JSON.parse(payload);
+        console.log(typeof JSON.parse(payload), payloadData);
+        localStorage.setItem('user', payload);
+        setIsLogin(true);
+        setIsLoginModalOpen(false);
+      })
+      .catch((err) => {});
+  };
 
   return (
     <div className="absolute w-full h-full flex justify-center items-center">
