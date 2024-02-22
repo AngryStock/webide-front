@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
-import { redirect, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import SignupModal from './component/SignupModal';
 import SignupSuccess from './component/SignupSuccess';
@@ -13,8 +13,8 @@ import MyTreeView from './component/MyTreeView';
 import FileMenu from './component/FileMenu';
 import { fileAdd, folderAdd } from '../../store/reducers/fileTreeSlice';
 import TreeRightClick from './component/TreeRightClick';
-import { defaultChatRoomDelete, defaultChatRoomMessagePush } from '../../store/reducers/defaultChatRoomSlice';
-import { AuthApi } from '../../api/api-util';
+import { setChatHistory } from '../../store/reducers/defaultChatRoomSlice';
+import { AuthApi, fetchDefaultChatRoomId } from '../../api/api-util';
 
 interface MainProps {
   roomId: string;
@@ -61,25 +61,21 @@ function Main({ roomId, setRoomId }: MainProps) {
   useEffect(() => {
     if (!localStorage.getItem('user')) return;
 
-    AuthApi.get('/chat/rooms')
-      .then((res) => {
-        const defaultRoom = res.data.find((room: any) => room.name === 'defaultChatRoom');
-        if (!defaultRoom) {
-          return AuthApi.post('/chat/room', null, { params: { name: 'defaultChatRoom' } });
+    const fetchData = async () => {
+      try {
+        const roomId = await fetchDefaultChatRoomId();
+        if (roomId) {
+          setRoomId(roomId);
+          const res = await AuthApi.get(`/chat/roomId/${roomId}`);
+          dispatch(setChatHistory(res.data));
         }
-        return defaultRoom;
-      })
-      .then((result) => {
-        const roomId = result.data ? result.data.roomId : result.roomId;
-        setRoomId(roomId);
-        AuthApi.get(`/chat/roomId/${roomId}`).then((res) => {
-          dispatch(defaultChatRoomMessagePush(res.data));
-        });
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error(err);
-      });
-  }, [dispatch]);
+      }
+    };
+
+    fetchData();
+  }, [dispatch, setRoomId]);
 
   const isTerminalOpen = useAppSelector((state) => {
     if (state.uiControl.isTerminalOpen === undefined) {
@@ -98,7 +94,7 @@ function Main({ roomId, setRoomId }: MainProps) {
   const logoutHandler = () => {
     localStorage.removeItem('user');
     localStorage.removeItem('access_token');
-    dispatch(defaultChatRoomDelete([]));
+    dispatch(setChatHistory([]));
     navigate('/redirect');
   };
 
