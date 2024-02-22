@@ -1,8 +1,6 @@
-import axios from 'axios';
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
-import { useAppDispatch } from '../../../store/hooks';
-import { setUser } from '../../../store/reducers/userSlice';
 import { AuthApi } from '../../../api/api-util';
+import { redirect, useNavigate } from 'react-router-dom';
 
 interface LoginModalProps {
   setIsLoginModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -10,7 +8,7 @@ interface LoginModalProps {
 }
 
 function LoginModal({ setIsLoginModalOpen, setIsLogin }: LoginModalProps) {
-  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [userid, setUserId] = useState('');
   const [password, setPassword] = useState('');
@@ -37,11 +35,8 @@ function LoginModal({ setIsLoginModalOpen, setIsLogin }: LoginModalProps) {
             })
             .join('')
         );
-        const payloadData = JSON.parse(payload);
-        console.log(typeof JSON.parse(payload), payloadData);
         localStorage.setItem('user', payload);
-        setIsLogin(true);
-        setIsLoginModalOpen(false);
+        navigate('/redirect');
       })
       .catch((err) => {});
   };
