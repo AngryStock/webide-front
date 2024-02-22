@@ -5,11 +5,13 @@ import { persistReducer } from 'redux-persist';
 import uiControlSliceReducer from './reducers/uiControlSlice';
 import defaultChatRoomSliceReducer from './reducers/defaultChatRoomSlice';
 import fileTreeSliceReducer from './reducers/fileTreeSlice';
+import userSliceReducer from './reducers/userSlice';
 
 const reducer = combineReducers({
   uiControl: uiControlSliceReducer,
   defaultChatRoom: defaultChatRoomSliceReducer,
   fileTree: fileTreeSliceReducer,
+  user: userSliceReducer,
 });
 
 const persistConfig = {

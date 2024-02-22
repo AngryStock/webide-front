@@ -1,4 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
+
+import { useNavigate } from 'react-router-dom';
+
 import SignupModal from './component/SignupModal';
 import SignupSuccess from './component/SignupSuccess';
 import LoginModal from './component/LoginModal';
@@ -29,6 +32,7 @@ interface FileTreeData {
 
 function Main({ roomId }: MainProps) {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const [isLogin, setIsLogin] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
@@ -44,7 +48,7 @@ function Main({ roomId }: MainProps) {
   const myTreeViewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (localStorage.getItem('wschat.sender')) {
+    if (localStorage.getItem('user')) {
       setIsLogin(true);
     } else {
       setIsLogin(false);
@@ -66,8 +70,10 @@ function Main({ roomId }: MainProps) {
     }
   });
   const logoutHandler = () => {
-    localStorage.removeItem('wschat.sender');
+    localStorage.removeItem('user');
+    localStorage.removeItem('access_token');
     setIsLogin(false);
+    navigate('/');
   };
 
   return (

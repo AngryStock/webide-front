@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import * as StompJs from '@stomp/stompjs';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { defaultChatRoomMessagePush } from '../../../store/reducers/defaultChatRoomSlice';
+import { headers } from '../../../api/api-util';
 
 interface ChatRoomProps {
   roomId: string;
@@ -23,11 +24,16 @@ function ChatRoom({ roomId }: ChatRoomProps) {
   }[] = useAppSelector((state) => state.defaultChatRoom);
 
   useEffect(() => {
-    const storedSender = localStorage.getItem('wschat.sender');
-    if (storedSender) {
-      setSender(storedSender);
+    const user = localStorage.getItem('user');
+    let userData: any;
+    if (user) {
+      userData = JSON.parse(user);
     }
-
+    if (!userData) {
+      return;
+    } else {
+      setSender(userData.name);
+    }
     connect();
 
     return () => {
@@ -43,12 +49,10 @@ function ChatRoom({ roomId }: ChatRoomProps) {
 
   const connect = () => {
     client.current = new StompJs.Client({
+      connectHeaders: headers,
       brokerURL: 'ws://localhost:8080/ws-stomp/websocket', // 웹소켓 서버로 직접 접속
-      // webSocketFactory: () => new SockJS('/ws-stomp'), // proxy를 통한 접속
-      // connectHeaders: {
-      //   'auth-token': 'spring-chat-auth-token',
-      // },
       reconnectDelay: 5000,
+      // webSocketFactory: () => new SockJS('/ws-stomp'), // proxy를 통한 접속
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
       onConnect: () => {
@@ -70,10 +74,14 @@ function ChatRoom({ roomId }: ChatRoomProps) {
 
   const subscribe = () => {
     if (client.current) {
-      client.current.subscribe(`/sub/chat/room/${roomId}`, (message) => {
-        const newMessage = JSON.parse(message.body);
-        dispatch(defaultChatRoomMessagePush([newMessage]));
-      });
+      client.current.subscribe(
+        `/sub/chat/room/${roomId}`,
+        (message) => {
+          const newMessage = JSON.parse(message.body);
+          dispatch(defaultChatRoomMessagePush([newMessage]));
+        },
+        headers
+      );
     }
   };
 
@@ -83,9 +91,10 @@ function ChatRoom({ roomId }: ChatRoomProps) {
       client.current.publish({
         destination: '/pub/chat/message',
         body: JSON.stringify({ type: 'TALK', roomId: roomId, sender: sender, message: message }),
+        headers,
       });
     }
-    setMessage(''); // 메시지 전송 후 입력 필드 초기화
+    setMessage('');
   };
 
   const handleScroll = (ref: HTMLDivElement | null) => {
@@ -106,9 +115,7 @@ function ChatRoom({ roomId }: ChatRoomProps) {
               chatRef.current[index] = el;
             }}
             key={index}
-            className={`${
-              message.sender === localStorage.getItem('wschat.sender') ? 'text-right' : ' text-left'
-            }  text-white text-sm`}
+            className={`${message.sender === sender ? 'text-right' : ' text-left'}  text-white text-sm`}
           >
             {message.sender} - {message.message}
           </div>
