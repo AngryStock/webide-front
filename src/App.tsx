@@ -10,7 +10,7 @@ function App() {
     <Routes>
       <Route path="*" element={<Navigate to="/" replace />}></Route>
       <Route path="/" element={<Main roomId={roomId} setRoomId={setRoomId} />}></Route>
-      <Route path="/pagechatroom" element={<PageChatRoom roomId={roomId} />}></Route>
+      <Route path="/pagechatroom" element={<PageChatRoom roomId={roomId} setRoomId={setRoomId} />}></Route>
     </Routes>
   );
 }

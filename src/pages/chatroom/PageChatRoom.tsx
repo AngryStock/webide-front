@@ -1,14 +1,15 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import * as StompJs from '@stomp/stompjs';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { defaultChatRoomMessagePush } from '../../store/reducers/defaultChatRoomSlice';
-import { headers } from '../../api/api-util';
+import { defaultChatRoomMessagePush, setChatHistory } from '../../store/reducers/defaultChatRoomSlice';
+import { AuthApi, fetchDefaultChatRoomId, headers } from '../../api/api-util';
 
 interface PageChatRoomProps {
   roomId: string;
+  setRoomId: Dispatch<SetStateAction<string>>;
 }
 
-function PageChatRoom({ roomId }: PageChatRoomProps) {
+function PageChatRoom({ roomId, setRoomId }: PageChatRoomProps) {
   const dispatch = useAppDispatch();
 
   const chatRef = useRef<HTMLDivElement[]>([]);
@@ -22,6 +23,25 @@ function PageChatRoom({ roomId }: PageChatRoomProps) {
     createAt: string;
     id: number;
   }[] = useAppSelector((state) => state.defaultChatRoom);
+
+  useEffect(() => {
+    if (!localStorage.getItem('user')) return;
+
+    const fetchData = async () => {
+      try {
+        const roomId = await fetchDefaultChatRoomId();
+        if (roomId) {
+          setRoomId(roomId);
+          const res = await AuthApi.get(`/chat/roomId/${roomId}`);
+          dispatch(setChatHistory(res.data));
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchData();
+  }, [dispatch, setRoomId]);
 
   useEffect(() => {
     const user = localStorage.getItem('user');
