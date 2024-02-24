@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
 import * as StompJs from '@stomp/stompjs';
 
-import { AuthApi, fetchDefaultChatRoomId, headers } from '@/api/api-util';
+import { AuthApi, baseURL, fetchDefaultChatRoomId, headers } from '@/api/api-util';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { defaultChatRoomMessagePush, setChatHistory } from '@/store/reducers/defaultChatRoomSlice';
 
@@ -75,7 +75,7 @@ function PageChatRoom({ roomId, setRoomId }: PageChatRoomProps) {
   const connect = () => {
     client.current = new StompJs.Client({
       connectHeaders: headers,
-      brokerURL: 'ws://localhost:8080/ws-stomp/websocket', // 웹소켓 서버로 직접 접속
+      brokerURL: `ws://${baseURL}/ws-stomp/websocket`, // 웹소켓 서버로 직접 접속
       reconnectDelay: 5000,
       // webSocketFactory: () => new SockJS('/ws-stomp'), // proxy를 통한 접속
       heartbeatIncoming: 4000,

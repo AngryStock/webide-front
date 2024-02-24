@@ -2,6 +2,8 @@ import { Dispatch, SetStateAction, useRef, useState } from 'react';
 
 import axios from 'axios';
 
+import { AuthApi } from '@/api/api-util';
+
 interface SignupModalProps {
   setIsSignupModalOpen: Dispatch<SetStateAction<boolean>>;
   setIsSignupSuccessOpen: Dispatch<SetStateAction<boolean>>;
@@ -48,8 +50,7 @@ function SignupModal({ setIsSignupModalOpen, setIsSignupSuccessOpen }: SignupMod
   };
 
   const useridConfirm = async () => {
-    await axios
-      .get(`http://localhost:8080/duplicate/${userid}`)
+    await AuthApi.get(`/duplicate/${userid}`)
       .then((res: any) => {
         if (res.data === '') {
           setIsAreadyUserid(false);
@@ -66,13 +67,12 @@ function SignupModal({ setIsSignupModalOpen, setIsSignupSuccessOpen }: SignupMod
 
   const signupApi = async () => {
     if (isUserid && !isAreadyUserid && isPasswordConfirm && isPassword && name.length >= 1) {
-      await axios
-        .post(`http://localhost:8080/signup`, {
-          name: name,
-          loginId: userid,
-          password: password,
-          mobileNumber: phoneNumber,
-        })
+      await AuthApi.post(`/signup`, {
+        name: name,
+        loginId: userid,
+        password: password,
+        mobileNumber: phoneNumber,
+      })
         .then((res: any) => {
           if (res.data.httpCode === 200) {
             setIsSignupModalOpen(false);
