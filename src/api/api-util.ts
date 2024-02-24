@@ -3,7 +3,7 @@ import axios from 'axios';
 let token_type = localStorage.getItem('token_type');
 let access_token = localStorage.getItem('access_token');
 
-export const baseURL = '3.39.6.173';
+export const baseURL = 'kingide.o-r.kr';
 // export const baseURL = 'localhost:8080';
 
 export let headers = {
