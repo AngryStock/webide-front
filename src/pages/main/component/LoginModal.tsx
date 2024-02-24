@@ -22,8 +22,9 @@ function LoginModal({ setIsLoginModalOpen, setIsLogin }: LoginModalProps) {
   };
 
   const loginHandler = async () => {
-    AuthApi.post('/login', { loginId: userid, password: password })
+    await AuthApi.post('/login', { loginId: userid, password: password })
       .then((res) => {
+        console.log(res);
         const token = res.headers.authorization.replace('Bearer ', '');
         localStorage.setItem('access_token', token);
         localStorage.setItem('token_type', 'Bearer');
@@ -40,6 +41,7 @@ function LoginModal({ setIsLoginModalOpen, setIsLogin }: LoginModalProps) {
         localStorage.setItem('user', payload);
         navigate('/redirect');
       })
+
       .catch((err) => {});
   };
 
