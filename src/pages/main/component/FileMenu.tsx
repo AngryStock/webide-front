@@ -71,7 +71,7 @@ function FileMenu({ selectedFile }: Props) {
         )}
       </div>
       <div className="h-[30px] flex items-center justify-between hover:bg-black px-5">
-        <div className="text-white">파일 열기</div>
+        <div className="text-white">폴더 열기</div>
         <div className="text-gray-400 pr-2">Ctrl + O</div>
       </div>
     </div>
