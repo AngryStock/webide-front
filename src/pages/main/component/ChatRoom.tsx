@@ -24,6 +24,7 @@ function ChatRoom({ roomId }: ChatRoomProps) {
     sender: string;
     message: string;
     createAt: string;
+    loginId: string;
     id: number;
   }[] = useAppSelector((state) => state.defaultChatRoom);
 
@@ -120,7 +121,7 @@ function ChatRoom({ roomId }: ChatRoomProps) {
               chatRef.current[index] = el;
             }}
             key={index}
-            className={`${message.sender === sender ? 'text-right' : ' text-left'}  text-white text-sm`}
+            className={`${message.loginId === loginId ? 'text-right' : ' text-left'}  text-white text-sm`}
           >
             {message.sender} - {message.message}
           </div>

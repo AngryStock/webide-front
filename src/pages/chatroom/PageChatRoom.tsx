@@ -145,7 +145,7 @@ function PageChatRoom({ roomId, setRoomId }: PageChatRoomProps) {
             key={index}
             className={`${message.loginId === loginId ? 'text-right' : ' text-left'}  text-white text-sm`}
           >
-            {message.loginId} - {message.message}
+            {message.sender} - {message.message}
           </div>
         ))}
       </div>
