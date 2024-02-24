@@ -16,6 +16,7 @@ export const fileTreeSlice = createSlice({
       data: {
         fileType: 'json',
         fileSize: '0.5MB',
+        value: '{ "name":"webide-front","version":"0.1.0","private":true}',
       },
     },
     {
@@ -25,6 +26,7 @@ export const fileTreeSlice = createSlice({
       data: {
         fileType: 'md',
         fileSize: '4.8MB',
+        value: '',
       },
     },
 
@@ -47,6 +49,7 @@ export const fileTreeSlice = createSlice({
       data: {
         fileType: 'js',
         fileSize: '2.1MB',
+        value: 'function heeil(a, b) { return a + b; }',
       },
     },
     {
@@ -56,6 +59,7 @@ export const fileTreeSlice = createSlice({
       data: {
         fileType: 'java',
         fileSize: '2.1MB',
+        value: '',
       },
     },
     {
@@ -65,6 +69,7 @@ export const fileTreeSlice = createSlice({
       data: {
         fileType: 'html',
         fileSize: '2.1MB',
+        value: '<html lang="ko"> <head><title>React App</title></head> ',
       },
     },
     {
@@ -74,6 +79,7 @@ export const fileTreeSlice = createSlice({
       data: {
         fileType: 'css',
         fileSize: '2.1MB',
+        value: '',
       },
     },
     {
@@ -133,15 +139,15 @@ export const fileTreeSlice = createSlice({
         state.push({
           id: state[state.length - 1].id + 1,
           parent: action.payload.id,
-          text: '',
-          data: { fileType: '', fileSize: '' },
+          text: 'untitle.txt',
+          data: { fileType: 'txt', fileSize: '' },
         });
       } else {
         state.push({
           id: state[state.length - 1].id + 1,
           parent: action.payload.parent,
-          text: '',
-          data: { fileType: '', fileSize: '' },
+          text: 'untitle.txt',
+          data: { fileType: 'txt', fileSize: '' },
         });
       }
     },
@@ -150,14 +156,14 @@ export const fileTreeSlice = createSlice({
         state.push({
           id: state[state.length - 1].id + 1,
           parent: action.payload.id,
-          text: '',
+          text: 'untitle',
           droppable: true,
         });
       } else {
         state.push({
           id: state[state.length - 1].id + 1,
           parent: action.payload.parent,
-          text: '',
+          text: 'untitle',
           droppable: true,
         });
       }

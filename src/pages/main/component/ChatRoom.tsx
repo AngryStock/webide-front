@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+
 import * as StompJs from '@stomp/stompjs';
+
+import { headers } from '../../../api/api-util';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { defaultChatRoomMessagePush } from '../../../store/reducers/defaultChatRoomSlice';
-import { headers } from '../../../api/api-util';
 
 interface ChatRoomProps {
   roomId: string;
@@ -14,6 +16,8 @@ function ChatRoom({ roomId }: ChatRoomProps) {
   const chatRef = useRef<HTMLDivElement[]>([]);
   const client = useRef<StompJs.Client | null>(null);
   const [sender, setSender] = useState('');
+  const [loginId, setLoginId] = useState('');
+
   const [message, setMessage] = useState('');
   const messages: {
     type: string;
@@ -33,6 +37,7 @@ function ChatRoom({ roomId }: ChatRoomProps) {
       return;
     } else {
       setSender(userData.name);
+      setLoginId(userData.loginId);
     }
     connect();
 
@@ -80,7 +85,7 @@ function ChatRoom({ roomId }: ChatRoomProps) {
           const newMessage = JSON.parse(message.body);
           dispatch(defaultChatRoomMessagePush([newMessage]));
         },
-        headers
+        headers,
       );
     }
   };
@@ -90,7 +95,7 @@ function ChatRoom({ roomId }: ChatRoomProps) {
     if (client.current && client.current.connected) {
       client.current.publish({
         destination: '/pub/chat/message',
-        body: JSON.stringify({ type: 'TALK', roomId: roomId, sender: sender, message: message }),
+        body: JSON.stringify({ type: 'TALK', roomId: roomId, sender: sender, message: message, loginId: loginId }),
         headers,
       });
     }
@@ -107,7 +112,7 @@ function ChatRoom({ roomId }: ChatRoomProps) {
     <div className="w-full" style={{ height: 'calc(100% - 30px)' }}>
       <div
         className="w-full overflow-y-scroll scrollbar-hide p-2"
-        style={{ height: 'calc(100% - 30px)', backgroundColor: '#141617' }}
+        style={{ height: 'calc(100% - 30px)', backgroundColor: '#1e1e1e' }}
       >
         {messages.map((message, index) => (
           <div
@@ -133,7 +138,7 @@ function ChatRoom({ roomId }: ChatRoomProps) {
           <button
             type="submit"
             className="h-full w-[60px] text-white text-sm flex justify-center items-center"
-            style={{ borderLeft: 'solid 1px #141617' }}
+            style={{ borderLeft: 'solid 1px #1e1e1e' }}
           >
             보내기
           </button>
