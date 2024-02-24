@@ -15,9 +15,10 @@ export const AuthApi = axios.create({
 
 export const fetchDefaultChatRoomId = async () => {
   try {
+    getToken();
     if (!localStorage.getItem('user')) return;
     const res = await AuthApi.get('/chat/rooms');
-    const defaultRoom = res.data.find((room: any) => room.name === 'defaultChatRoom');
+    const defaultRoom = await res.data.find((room: any) => room.name === 'defaultChatRoom');
 
     if (!defaultRoom) {
       const result = await AuthApi.post('/chat/room', null, { params: { name: 'defaultChatRoom' } });
@@ -31,3 +32,12 @@ export const fetchDefaultChatRoomId = async () => {
     throw err; // 예외 다시 던지기
   }
 };
+
+function getToken() {
+  token_type = localStorage.getItem('token_type');
+  access_token = localStorage.getItem('access_token');
+  headers = {
+    'Content-Type': 'application/json',
+    Authorization: `${token_type} ${access_token}`,
+  };
+}

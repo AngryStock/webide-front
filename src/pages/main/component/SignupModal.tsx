@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useRef, useState } from 'react';
+
 import axios from 'axios';
 
 interface SignupModalProps {
@@ -94,9 +95,9 @@ function SignupModal({ setIsSignupModalOpen, setIsSignupSuccessOpen }: SignupMod
     }
   };
   return (
-    <div className="absolute w-full h-full flex justify-center items-center">
+    <div className="absolute w-full h-full flex justify-center items-center z-10">
       <div className="absolute w-full h-full" onClick={closeSignupModal}></div>
-      <div className="w-[380px] h-[589px] bg-black  rounded-[20px] z-10 p-10">
+      <div className="w-[380px] h-[589px] bg-black  rounded-[20px] z-20 p-10">
         <form>
           <div className=" text-2xl text-white text-center mb-10">
             <span className="font-bold">king</span>

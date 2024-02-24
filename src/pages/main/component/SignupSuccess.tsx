@@ -11,9 +11,9 @@ function SignupSuccess({ setIsSignupSuccessOpen, setIsLoginModalOpen }: SignupSu
   };
 
   return (
-    <div className="absolute w-full h-full flex justify-center items-center">
+    <div className="absolute w-full h-full flex justify-center items-center z-10">
       <div className="absolute w-full h-full" onClick={closeSignupSuccess}></div>
-      <div className="w-[380px] h-[350px] bg-black  rounded-[20px] z-10 p-10">
+      <div className="w-[380px] h-[350px] bg-black  rounded-[20px] z-20 p-10">
         <div className=" text-2xl text-white text-center mb-10">
           <span className="font-bold">king</span>
           <span>ide</span>
