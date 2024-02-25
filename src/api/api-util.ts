@@ -12,7 +12,7 @@ export let headers = {
 };
 
 export const AuthApi = axios.create({
-  baseURL: `https://${baseURL}`,
+  baseURL: `http://${baseURL}`,
   headers: headers,
 });
 
