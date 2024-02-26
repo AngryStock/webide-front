@@ -72,7 +72,7 @@ function LoginModal({ setIsLoginModalOpen, setIsLogin }: LoginModalProps) {
           onChange={(e) => {
             setPassword(e.target.value);
           }}
-          placeholder="비밀번호 확인"
+          placeholder="비밀번호"
           ref={passwordRef}
           autoComplete="off"
         />
