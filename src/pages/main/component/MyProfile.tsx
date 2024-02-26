@@ -1,5 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
+import { AuthApi } from '@/api/api-util';
+
 interface MyProfileProps {
   setIsMyProfileOpen: Dispatch<SetStateAction<boolean>>;
 }
@@ -28,7 +30,13 @@ function MyProfile({ setIsMyProfileOpen }: MyProfileProps) {
     setIsMyProfileOpen(false);
   };
   const signoutHandler = () => {
-    setIsMyProfileOpen(false);
+    AuthApi.get('/member/withdrawal')
+      .then((res: any) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (
