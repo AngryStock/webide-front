@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
+import { AuthApi } from '@/api/api-util';
 import { useAppDispatch } from '@/store/hooks';
 import { fileAdd, folderAdd } from '@/store/reducers/fileTreeSlice';
 
@@ -18,9 +19,10 @@ interface FileTreeData {
 
 interface Props {
   selectedFile: FileTree;
+  setIsFolderOpenModal: Dispatch<SetStateAction<boolean>>;
 }
 
-function FileMenu({ selectedFile }: Props) {
+function FileMenu({ selectedFile, setIsFolderOpenModal }: Props) {
   const dispatch = useAppDispatch();
 
   const [isHovering, setIsHovering] = useState(false);
@@ -30,6 +32,16 @@ function FileMenu({ selectedFile }: Props) {
   }
   function mouseOutHandler() {
     setIsHovering(false);
+  }
+
+  function setFolderHandler() {
+    AuthApi.get('/editor/folders')
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   }
   return (
     <div
@@ -70,7 +82,13 @@ function FileMenu({ selectedFile }: Props) {
           </div>
         )}
       </div>
-      <div className="h-[30px] flex items-center justify-between hover:bg-black px-5">
+      <div
+        className="h-[30px] flex items-center justify-between hover:bg-black px-5"
+        onClick={() => {
+          setFolderHandler();
+          setIsFolderOpenModal(true);
+        }}
+      >
         <div className="text-white">폴더 열기</div>
         <div className="text-gray-400 pr-2">Ctrl + O</div>
       </div>

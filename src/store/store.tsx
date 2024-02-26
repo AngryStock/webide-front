@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import defaultChatRoomSliceReducer from './reducers/defaultChatRoomSlice';
 import editorSliceReducer from './reducers/editorSlice';
 import fileTreeSliceReducer from './reducers/fileTreeSlice';
+import folderSliceReducer from './reducers/folderSlice';
 import uiControlSliceReducer from './reducers/uiControlSlice';
 import userSliceReducer from './reducers/userSlice';
 
@@ -14,12 +15,13 @@ const reducer = combineReducers({
   fileTree: fileTreeSliceReducer,
   user: userSliceReducer,
   editor: editorSliceReducer,
+  folder: folderSliceReducer,
 });
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['uiControl'],
+  whitelist: ['uiControl', 'fileTree', 'editor', 'folder'],
 };
 
 export const store = configureStore({

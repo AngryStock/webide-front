@@ -28,9 +28,13 @@ export const editorSlice = createSlice({
       const lastDotIndex = name.lastIndexOf('.');
       state[key].language = name.substring(lastDotIndex + 1, name.length);
     },
+    editValue(state, action) {
+      const { key, value } = action.payload;
+      state[key].value = value;
+    },
   },
 });
 
-export const { addEditor, deleteEditor, renameEditor } = editorSlice.actions;
+export const { addEditor, deleteEditor, renameEditor, editValue } = editorSlice.actions;
 
 export default editorSlice.reducer;

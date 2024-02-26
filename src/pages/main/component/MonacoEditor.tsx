@@ -4,7 +4,7 @@ import Editor from '@monaco-editor/react';
 
 import TypeIcon from '@/component/TypeIcon';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { deleteEditor } from '@/store/reducers/editorSlice';
+import { deleteEditor, editValue } from '@/store/reducers/editorSlice';
 
 interface File {
   name: string;
@@ -100,6 +100,9 @@ function MonacoEditor({ fileName, setFileName }: Props) {
             path={file.name}
             language={file.language === 'js' ? 'javascript' : file.language}
             value={file.value}
+            onChange={(e) => {
+              dispatch(editValue({ key: fileName, value: e }));
+            }}
           />
         ) : (
           <div className="w-full h-full"></div>
