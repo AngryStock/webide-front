@@ -1,12 +1,19 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
+import { useNavigate } from 'react-router-dom';
+
 import { AuthApi } from '@/api/api-util';
+import { useAppDispatch } from '@/store/hooks';
+import { setChatHistory } from '@/store/reducers/defaultChatRoomSlice';
 
 interface MyProfileProps {
   setIsMyProfileOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 function MyProfile({ setIsMyProfileOpen }: MyProfileProps) {
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
   const [name, setName] = useState('');
   const [userid, setUserId] = useState('');
   const [phoneNumber, setPhoneNumer] = useState('');
@@ -32,7 +39,10 @@ function MyProfile({ setIsMyProfileOpen }: MyProfileProps) {
   const signoutHandler = () => {
     AuthApi.get('/member/withdrawal')
       .then((res: any) => {
-        console.log(res);
+        localStorage.removeItem('user');
+        localStorage.removeItem('access_token');
+        dispatch(setChatHistory([]));
+        navigate('/redirect');
       })
       .catch((err) => {
         console.error(err);
