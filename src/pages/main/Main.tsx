@@ -10,6 +10,7 @@ import { isChattingOpenHandler, isTerminalOpenHandler } from '@/store/reducers/u
 
 import ChatRoom from './component/ChatRoom';
 import FileMenu from './component/FileMenu';
+import FolderOpenModal from './component/FolderOpenModal';
 import LoginModal from './component/LoginModal';
 import MonacoEditor from './component/MonacoEditor';
 import MyProfile from './component/MyProfile';
@@ -57,6 +58,7 @@ function Main({ roomId, setRoomId }: MainProps) {
   });
   const [isEditFileName, setIsEditFileName] = useState(false);
   const [fileName, setFileName] = useState('');
+  const [isFolderOpenModal, setIsFolderOpenModal] = useState(false);
 
   const myTreeViewRef = useRef<HTMLDivElement>(null);
 
@@ -108,7 +110,7 @@ function Main({ roomId, setRoomId }: MainProps) {
       {isSignupSuccessOpen && (
         <SignupSuccess setIsLoginModalOpen={setIsLoginModalOpen} setIsSignupSuccessOpen={setIsSignupSuccessOpen} />
       )}
-      {isLoginModalOpen && <LoginModal setIsLoginModalOpen={setIsLoginModalOpen} setIsLogin={setIsLogin} />}
+      {isLoginModalOpen && <LoginModal setIsLoginModalOpen={setIsLoginModalOpen} />}
       {isMyProfileOpen && <MyProfile setIsMyProfileOpen={setIsMyProfileOpen} />}
       {isTreeRightClick && (
         <TreeRightClick
@@ -117,6 +119,7 @@ function Main({ roomId, setRoomId }: MainProps) {
           setIsTreeRightClick={setIsTreeRightClick}
         />
       )}
+      {isFolderOpenModal && <FolderOpenModal setIsFolderOpenModal={setIsFolderOpenModal} />}
 
       <div
         className="w-full h-[32px] px-5 flex"
@@ -137,7 +140,7 @@ function Main({ roomId, setRoomId }: MainProps) {
             }}
           >
             파일
-            {isFileMenuOpen && <FileMenu selectedFile={selectedFile} />}
+            {isFileMenuOpen && <FileMenu selectedFile={selectedFile} setIsFolderOpenModal={setIsFolderOpenModal} />}
           </div>
           <div className=" cursor-pointer customhover h-full flex justify-center items-center px-[10px]">보기</div>
           <div className=" cursor-pointer customhover h-full flex justify-center items-center px-[10px]">실행</div>

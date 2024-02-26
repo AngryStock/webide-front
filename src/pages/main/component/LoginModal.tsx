@@ -6,10 +6,9 @@ import { AuthApi } from '@/api/api-util';
 
 interface LoginModalProps {
   setIsLoginModalOpen: Dispatch<SetStateAction<boolean>>;
-  setIsLogin: Dispatch<SetStateAction<boolean>>;
 }
 
-function LoginModal({ setIsLoginModalOpen, setIsLogin }: LoginModalProps) {
+function LoginModal({ setIsLoginModalOpen }: LoginModalProps) {
   const navigate = useNavigate();
 
   const [userid, setUserId] = useState('');
